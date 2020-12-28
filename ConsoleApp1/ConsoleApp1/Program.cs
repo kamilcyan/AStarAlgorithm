@@ -15,44 +15,72 @@ namespace ConsoleApp1
 
             int[,] tab = new int[20,20];
             tab = m.GenerujTablice();
-            draw.Rysuj(tab);
+            draw.Rysuj(tab, 0, 0);
 
             Program p = new Program();
-            p.MalaTablica(tab);
+            //p.MalaTablica(tab);
+            p.RoadCheck(tab, 1, 1);
 
             Console.ReadKey();
         }
 
-        void MalaTablica(int[,] tab)
+        //void MalaTablica(int[,] tab)
+        //{
+        //    int iteratorX = 0;
+        //    int iteratorY = 0;
+
+        //    int[,] malyTab = new int[3, 3];
+
+        //    Point point = new Point(1, 1);
+
+        //    for(int i = point.X-1; i < point.X+2; i++)
+        //    {
+        //        for(int j = point.Y-1; j< point.Y+2; j++)
+        //        {
+        //            malyTab[iteratorX, iteratorY] = tab[i, j];
+        //            while(iteratorX <2)
+        //                iteratorX++;
+        //        }
+        //        while(iteratorY<2)
+        //        iteratorY++;
+        //    }
+
+        //    Draw draw = new Draw();
+        //    draw.RysujMala(malyTab);
+        //}
+
+        void RoadCheck(int[,] tab, int X, int Y)
         {
-            int iteratorX = 0;
-            int iteratorY = 0;
-
-            int[,] malyTab = new int[3, 3];
-
-            Point point = new Point(1, 1);
-
-            for(int i = point.X-1; i < point.X+2; i++)
-            {
-                for(int j = point.Y-1; j< point.Y+2; j++)
-                {
-                    malyTab[iteratorX, iteratorY] = tab[i, j];
-                    while(iteratorX <2)
-                        iteratorX++;
-                }
-                while(iteratorY<2)
-                iteratorY++;
-            }
-
             Draw draw = new Draw();
-            draw.RysujMala(malyTab);
+            Console.Write("\n");
+
+            for (int i = X - 1; i < X + 1; i++)
+            {
+                for(int j = Y -1; j<Y+1; j++)
+                {
+                    if(i ==0 )
+                    {
+                        i = 1;
+                    }
+                    if ( j == 0)
+                    {
+                        j = 1;
+                    }
+                    if (tab[i, j] == 1)
+                    {
+                        draw.Rysuj(tab, i, j);
+                        tab[i, j] = 0;
+                        RoadCheck(tab, i, j);
+                    }
+                }
+                
+            }
         }
+
     }
 
     public class Point
     {
-        int _x;
-        int _y;
 
         public int X { get; set; }
         public int Y { get; set; }
@@ -85,12 +113,21 @@ namespace ConsoleApp1
 
     public class Draw
     {
-        public void Rysuj(int[,] tab)
+        public void Rysuj(int[,] tab, int X, int Y)
         {
             for (int i = 0; i < 20; i++)
             {
                 for (int j = 0; j < 20; j++)
                 {
+                    if(i == X)
+                    {
+                        if(j == Y)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.Write(tab[i, j]);
+                            Console.ResetColor();
+                        }
+                    }
                     Console.Write(tab[i,j]);
                 }
                 Console.Write("\n");
