@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleApp1
 {
@@ -15,11 +11,11 @@ namespace ConsoleApp1
 
             int[,] tab = new int[20,20];
             tab = m.GenerujTablice();
-            draw.Rysuj(tab, 0, 0);
+            //draw.Rysuj(tab, 2, 2, 10,10);
 
             Program p = new Program();
             //p.MalaTablica(tab);
-            p.RoadCheck(tab, 1, 1);
+            p.RoadCheck(tab, 1, 5);
 
             Console.ReadKey();
         }
@@ -51,29 +47,39 @@ namespace ConsoleApp1
 
         void RoadCheck(int[,] tab, int X, int Y)
         {
-            Draw draw = new Draw();
-            Console.Write("\n");
-
-            for (int i = X - 1; i < X + 1; i++)
+            Draw draw = new Draw();    
+            
+            for (int j= Y-1; j<Y+1; j++)
             {
-                for(int j = Y -1; j<Y+1; j++)
+                while (X + 1 < 19)
                 {
-                    if(i ==0 )
-                    {
-                        i = 1;
-                    }
-                    if ( j == 0)
+                    if (j < 1)
                     {
                         j = 1;
                     }
-                    if (tab[i, j] == 1)
+                    if (tab[X + 1, j] == 1)
                     {
-                        draw.Rysuj(tab, i, j);
-                        tab[i, j] = 0;
-                        RoadCheck(tab, i, j);
+                        draw.Rysuj(tab, X, Y, X + 1, j);
+                        RoadCheck(tab, X + 2, j);
+                    }
+                    else if (tab[X + 1, j-1] == 1)
+                    {
+                        draw.Rysuj(tab, X, Y, X + 1, j - 1);
+                        RoadCheck(tab, X + 2, j-1);
+                    }
+                    else if (tab[X + 1, j + 1] == 1)
+                    {
+                        draw.Rysuj(tab, X, Y, X + 1, j + 1);
+                        RoadCheck(tab, X + 2, j + 1);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Brak Sciezki");
+                        X = 19;
+                        RoadCheck(tab, X + 2, j + 1);
                     }
                 }
-                
+
             }
         }
 
@@ -113,37 +119,46 @@ namespace ConsoleApp1
 
     public class Draw
     {
-        public void Rysuj(int[,] tab, int X, int Y)
+        public void Rysuj(int[,] tab, int X, int Y, int A, int B)
         {
+
+            Console.Write("\n");
             for (int i = 0; i < 20; i++)
             {
                 for (int j = 0; j < 20; j++)
                 {
-                    if(i == X)
+                    if (i == X || i == A)
                     {
-                        if(j == Y)
+
+                        if (i == X)
                         {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.Write(tab[i, j]);
-                            Console.ResetColor();
+                            if (j == Y)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                            }
+                            else
+                            {
+                                Console.ForegroundColor = ConsoleColor.White;
+                            }
+                        }
+                        else if (i == A)
+                        {
+                            if (j == B)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Green;
+                            }
+                            else
+                            {
+                                Console.ForegroundColor = ConsoleColor.White;
+                            }
                         }
                     }
-                    Console.Write(tab[i,j]);
-                }
-                Console.Write("\n");
-            }
-        }
-
-        public void RysujMala(int[,] tab)
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                for (int j = 0; j < 3; j++)
-                {
                     Console.Write(tab[i, j]);
                 }
                 Console.Write("\n");
             }
+            Console.WriteLine("Obecny: " + X + ", " + Y);
+            Console.WriteLine("Nastepny: " + A + ", " + B);
         }
     }
 }
